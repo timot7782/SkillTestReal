@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SkillTestReal</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string-array name="initial_values">
+        <item>Login</item>
+        <item>+RSS</item>
+        <item>Twitter Feed</item>
+    </string-array>
+    <string name="drawer_open">Drawer Opened</string>
+    <string name="drawer_close">Drawer Closed</string>
+    <string name="app_id">1531818430417135</string>
+</resources>
