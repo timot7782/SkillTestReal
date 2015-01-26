@@ -12,4 +12,10 @@
     <string name="drawer_open">Drawer Opened</string>
     <string name="drawer_close">Drawer Closed</string>
     <string name="app_id">1531818430417135</string>
+    <string-array name="rss_sites">
+        <item>The Verge</item>
+        <item>Engadget</item>
+        <item>TechCrunch</item>
+        <item>Gizmodo</item>
+    </string-array>
 </resources>

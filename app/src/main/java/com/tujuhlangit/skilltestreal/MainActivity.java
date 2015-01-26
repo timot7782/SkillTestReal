@@ -4,10 +4,12 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +18,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -31,6 +35,9 @@ public class MainActivity extends ActionBarActivity implements ListView.OnItemCl
     private CharSequence mTitle;
     private CharSequence mDrawerTitle;
 
+    private LoginFragment loginFragment;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,9 +46,14 @@ public class MainActivity extends ActionBarActivity implements ListView.OnItemCl
         mTitle = mDrawerTitle = getTitle();
         initialValue = getResources().getStringArray(R.array.initial_values);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,initialValue));   //this=this activity itself
-        //myAdapter = new MyAdapter(this);
-        //mDrawerList.setAdapter(myAdapter);
+        //mDrawerList.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,initialValue));   //this=this activity itself
+        if(this.loginFragment.isLoggedIn()) {
+            myAdapter = new MyAdapter("fb");
+        }
+        else {
+            myAdapter = new MyAdapter(this);
+        }
+        mDrawerList.setAdapter(myAdapter);
         mDrawerList.setOnItemClickListener(this);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerListener = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer,
@@ -73,7 +85,7 @@ public class MainActivity extends ActionBarActivity implements ListView.OnItemCl
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, initialValue[position] + " was selected", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, initialValue[position] + " was selected", Toast.LENGTH_SHORT).show();
         selectItem(position);
         setTitle(initialValue[position]);
     }
@@ -82,14 +94,16 @@ public class MainActivity extends ActionBarActivity implements ListView.OnItemCl
 
         switch (position) {
             case 0:
-                Fragment loginFragment = new LoginFragment();
+                this.loginFragment = new LoginFragment();
                 FragmentManager loginFragmentManager = getFragmentManager();
-                loginFragmentManager.beginTransaction().replace(R.id.content_frame, loginFragment).commit();
+                loginFragmentManager.beginTransaction().replace(R.id.content_frame, this.loginFragment).commit();
                 break;
             case 1:
                 Fragment mainRSSFragment = new MainRSSFragment();
                 FragmentManager mainRSSFragmentManager = getFragmentManager();
                 mainRSSFragmentManager.beginTransaction().replace(R.id.content_frame, mainRSSFragment).commit();
+                break;
+            case 3:
                 break;
         }
 
@@ -148,13 +162,34 @@ public class MainActivity extends ActionBarActivity implements ListView.OnItemCl
 
     public class MyAdapter extends BaseAdapter {
 
-        String[] defaultVal;
+        String[] defaultVal = getResources().getStringArray(R.array.initial_values);
         Context context;
-        int[] myImages = {R.drawable.ic_launcher,R.drawable.ic_rss, R.drawable.ic_twitter};
+        int imgFacebook = R.drawable.ic_menu_facebook;
+        int imgGooglePlus = R.drawable.ic_menu_googleplus;
+        int imgRSS = R.drawable.ic_rss;
+        int imgTwitter = R.drawable.ic_twitter;
+        int[] myImages = {imgFacebook, imgRSS, imgTwitter};
+        int[] fbLoginImages = {imgFacebook, imgRSS, imgTwitter};
+        int[] gPlusLoginImages = {imgGooglePlus, imgRSS, imgTwitter};
+        private static final String TAG = "MyAdapter";
+        private boolean loginAsFb = false;
+        private boolean loginAsGplus = false;
+        String[] loginedValues = {"Profile", defaultVal[1], defaultVal[2]};
 
         public MyAdapter(Context context) {
             this.context = context;
-            defaultVal = getResources().getStringArray(R.array.initial_values);
+        }
+
+        public MyAdapter(String loginAsFacebookOrGooglePlus) {
+            super();
+            if(loginAsFacebookOrGooglePlus.equals("fb")) {
+                this.loginAsFb = true;
+                this.loginAsGplus = false;
+            }
+            else {
+                this.loginAsFb = true;
+                this.loginAsGplus = false;
+            }
         }
 
         @Override
@@ -175,15 +210,28 @@ public class MainActivity extends ActionBarActivity implements ListView.OnItemCl
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View row = null;
+
             if (convertView==null) {
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                row = inflater.inflate(R.layout.fragment_login, parent, false);
+                row = inflater.inflate(R.layout.drawer_list, parent, false);
             }
             else {
                 row = convertView;
             }
 
+            TextView textView = (TextView) row.findViewById(R.id.drawer_list_text);
+            ImageView imgView = (ImageView) row.findViewById(R.id.imageView);
+
+            if(this.loginAsGplus || this.loginAsFb) {
+                textView.setText(loginedValues[position]);
+                imgView.setImageResource(myImages[position]);
+            }
+            else {
+                textView.setText(defaultVal[position]);
+                imgView.setImageResource(myImages[position]);
+            }
             return row;
         }
+
     }
 }

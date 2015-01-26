@@ -97,6 +97,12 @@ public class LoginFragment extends Fragment {
         uiHelper.onSaveInstanceState(outState);
     }
 
+    public boolean isLoggedIn() {
+        Session session = Session.getActiveSession();
+        Log.i("LoginFragment7782", session.toString());
+        return (session != null && session.isOpened());
+    }
+
     public class NativeFragmentWrapper extends android.support.v4.app.Fragment {
         private final Fragment nativeFragment;
 

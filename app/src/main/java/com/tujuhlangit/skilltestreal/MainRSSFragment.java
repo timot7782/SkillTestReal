@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -14,6 +15,8 @@ import android.widget.TextView;
 public class MainRSSFragment extends Fragment{
     private static final String TAG = "MainRSSFragment";
     private TextView textView;
+    private String[] rssSites;
+    private ImageView imgView;
 
     public MainRSSFragment() {
 
@@ -23,8 +26,9 @@ public class MainRSSFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_rss, container, false);
-        textView = (TextView) rootView.findViewById(R.id.testTextView);
-        textView.setText("+RSS feed selected");
+        textView = (TextView) rootView.findViewById(R.id.drawer_list_text);
+        rssSites = getResources().getStringArray(R.array.rss_sites);
+        imgView = (ImageView) rootView.findViewById(R.id.imageView);
         return rootView;
     }
 }
