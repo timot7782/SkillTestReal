@@ -35,7 +35,7 @@ public class MainActivity extends ActionBarActivity implements ListView.OnItemCl
     private CharSequence mTitle;
     private CharSequence mDrawerTitle;
 
-    private LoginFragment loginFragment;
+    private LoginFragment loginFragment = new LoginFragment();;
 
 
     @Override
@@ -94,7 +94,7 @@ public class MainActivity extends ActionBarActivity implements ListView.OnItemCl
 
         switch (position) {
             case 0:
-                this.loginFragment = new LoginFragment();
+                //this.loginFragment = new LoginFragment();
                 FragmentManager loginFragmentManager = getFragmentManager();
                 loginFragmentManager.beginTransaction().replace(R.id.content_frame, this.loginFragment).commit();
                 break;

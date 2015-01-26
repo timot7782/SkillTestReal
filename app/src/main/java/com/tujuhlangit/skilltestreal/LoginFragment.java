@@ -99,7 +99,7 @@ public class LoginFragment extends Fragment {
 
     public boolean isLoggedIn() {
         Session session = Session.getActiveSession();
-        Log.i("LoginFragment7782", session.toString());
+//        Log.i("LoginFragment7782", session.toString());
         return (session != null && session.isOpened());
     }
 
