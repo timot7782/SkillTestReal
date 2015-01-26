@@ -48,7 +48,7 @@ public class MainActivity extends ActionBarActivity implements ListView.OnItemCl
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         //mDrawerList.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,initialValue));   //this=this activity itself
         if(this.loginFragment.isLoggedIn()) {
-            myAdapter = new MyAdapter("fb");
+            myAdapter = new MyAdapter(this,"fb");
         }
         else {
             myAdapter = new MyAdapter(this);
@@ -131,6 +131,37 @@ public class MainActivity extends ActionBarActivity implements ListView.OnItemCl
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("check on resume", this.loginFragment.toString());
+        if(this.loginFragment.isLoggedIn()) {
+            myAdapter = new MyAdapter(this,"fb");
+            mDrawerList.setAdapter(myAdapter);
+            mDrawerList.setOnItemClickListener(this);
+            drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawerListener = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer,
+                    R.string.drawer_open, R.string.drawer_close) {
+                @Override
+                public void onDrawerOpened(View drawerView) {
+                    //super.onDrawerOpened(drawerView);
+                    Toast.makeText(MainActivity.this, " Drawer Opened ", Toast.LENGTH_SHORT).show();
+                    getSupportActionBar().setTitle(mTitle);
+                    invalidateOptionsMenu();
+                }
+
+                @Override
+                public void onDrawerClosed(View drawerView) {
+                    //super.onDrawerClosed(drawerView);
+                    Toast.makeText(MainActivity.this, " Drawer Closed ", Toast.LENGTH_SHORT).show();
+                    getSupportActionBar().setTitle(mDrawerTitle);
+                    invalidateOptionsMenu();
+                }
+            };
+            drawerLayout.setDrawerListener(drawerListener);
+        }
+    }
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // Pass any configuration change to the drawer toggls
@@ -180,8 +211,8 @@ public class MainActivity extends ActionBarActivity implements ListView.OnItemCl
             this.context = context;
         }
 
-        public MyAdapter(String loginAsFacebookOrGooglePlus) {
-            super();
+        public MyAdapter(Context context, String loginAsFacebookOrGooglePlus) {
+            this.context = context;
             if(loginAsFacebookOrGooglePlus.equals("fb")) {
                 this.loginAsFb = true;
                 this.loginAsGplus = false;
