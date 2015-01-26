@@ -21,6 +21,7 @@ import com.facebook.widget.LoginButton;
 public class LoginFragment extends Fragment {
     private static final String TAG = "LoginFragment";
     private UiLifecycleHelper uiHelper;
+    private boolean loggedIn = false;
 
     public LoginFragment() {
 
@@ -36,10 +37,17 @@ public class LoginFragment extends Fragment {
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
         if (state.isOpened()) {
             Log.i(TAG, "Logged in...");
+            this.loggedIn = true;
         } else if (state.isClosed()) {
             Log.i(TAG, "Logged out...");
+            this.loggedIn = false;
         }
     }
+
+    public boolean getStatusLogin() {
+        return this.loggedIn;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -99,8 +107,21 @@ public class LoginFragment extends Fragment {
 
     public boolean isLoggedIn() {
         Session session = Session.getActiveSession();
-//        Log.i("LoginFragment7782", session.toString());
+        if(session != null)
+            Log.i("LoginFragment7782", session.toString());
         return (session != null && session.isOpened());
+    }
+
+    public String sessionToString() {
+        Session session = Session.getActiveSession();
+        return (session != null ? session.toString() : "NULL");
+    }
+
+    public boolean isLoggedOut() {
+        Session session = Session.getActiveSession();
+        if(session != null)
+            Log.i("LogoutFragment7782", session.toString());
+        return (session != null && session.isClosed());
     }
 
     public class NativeFragmentWrapper extends android.support.v4.app.Fragment {

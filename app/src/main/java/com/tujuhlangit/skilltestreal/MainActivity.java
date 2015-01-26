@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -16,12 +15,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity implements ListView.OnItemClickListener {
@@ -61,7 +58,7 @@ public class MainActivity extends ActionBarActivity implements ListView.OnItemCl
             @Override
             public void onDrawerOpened(View drawerView) {
                 //super.onDrawerOpened(drawerView);
-                Toast.makeText(MainActivity.this, " Drawer Opened ", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, " Drawer Opened ", Toast.LENGTH_SHORT).show();
                 getSupportActionBar().setTitle(mTitle);
                 invalidateOptionsMenu();
             }
@@ -69,7 +66,7 @@ public class MainActivity extends ActionBarActivity implements ListView.OnItemCl
             @Override
             public void onDrawerClosed(View drawerView) {
                 //super.onDrawerClosed(drawerView);
-                Toast.makeText(MainActivity.this," Drawer Closed ", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this," Drawer Closed ", Toast.LENGTH_SHORT).show();
                 getSupportActionBar().setTitle(mDrawerTitle);
                 invalidateOptionsMenu();
             }
@@ -85,7 +82,7 @@ public class MainActivity extends ActionBarActivity implements ListView.OnItemCl
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, initialValue[position] + " was selected", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, initialValue[position] + " was selected", Toast.LENGTH_SHORT).show();
         selectItem(position);
         setTitle(initialValue[position]);
     }
@@ -133,32 +130,39 @@ public class MainActivity extends ActionBarActivity implements ListView.OnItemCl
     @Override
     protected void onResume() {
         super.onResume();
-        Log.i("check on resume", this.loginFragment.toString());
+        //Log.i("check on resume", this.loginFragment.toString());
         if(this.loginFragment.isLoggedIn()) {
-            myAdapter = new MyAdapter(this,"fb");
-            mDrawerList.setAdapter(myAdapter);
-            mDrawerList.setOnItemClickListener(this);
-            drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawerListener = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer,
-                    R.string.drawer_open, R.string.drawer_close) {
-                @Override
-                public void onDrawerOpened(View drawerView) {
-                    //super.onDrawerOpened(drawerView);
-                    Toast.makeText(MainActivity.this, " Drawer Opened ", Toast.LENGTH_SHORT).show();
-                    getSupportActionBar().setTitle(mTitle);
-                    invalidateOptionsMenu();
-                }
-
-                @Override
-                public void onDrawerClosed(View drawerView) {
-                    //super.onDrawerClosed(drawerView);
-                    Toast.makeText(MainActivity.this, " Drawer Closed ", Toast.LENGTH_SHORT).show();
-                    getSupportActionBar().setTitle(mDrawerTitle);
-                    invalidateOptionsMenu();
-                }
-            };
-            drawerLayout.setDrawerListener(drawerListener);
+            Log.i("Login@ln135", "Login");
+            myAdapter = new MyAdapter(this, "fb");
         }
+        else {
+            Log.i("Login@ln135", "Logout");
+            myAdapter = new MyAdapter(this);
+        }
+
+        mDrawerList.setAdapter(myAdapter);
+        mDrawerList.setOnItemClickListener(this);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerListener = new ActionBarDrawerToggle(this, drawerLayout, R.drawable.ic_drawer,
+                R.string.drawer_open, R.string.drawer_close) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                //super.onDrawerOpened(drawerView);
+                //Toast.makeText(MainActivity.this, " Drawer Opened ", Toast.LENGTH_SHORT).show();
+                getSupportActionBar().setTitle(mTitle);
+                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                //super.onDrawerClosed(drawerView);
+                //Toast.makeText(MainActivity.this, " Drawer Closed ", Toast.LENGTH_SHORT).show();
+                getSupportActionBar().setTitle(mDrawerTitle);
+                invalidateOptionsMenu();
+            }
+        };
+        drawerLayout.setDrawerListener(drawerListener);
+
     }
 
     @Override
@@ -209,6 +213,8 @@ public class MainActivity extends ActionBarActivity implements ListView.OnItemCl
 
         public MyAdapter(Context context) {
             this.context = context;
+            this.loginAsFb = false;
+            this.loginAsGplus = false;
         }
 
         public MyAdapter(Context context, String loginAsFacebookOrGooglePlus) {
@@ -254,10 +260,12 @@ public class MainActivity extends ActionBarActivity implements ListView.OnItemCl
             ImageView imgView = (ImageView) row.findViewById(R.id.imageView);
 
             if(this.loginAsGplus || this.loginAsFb) {
+                Log.i("MyAdapter_Login@Ln261", "login as FB/G+");
                 textView.setText(loginedValues[position]);
                 imgView.setImageResource(myImages[position]);
             }
             else {
+                Log.i("MyAdapter_Login@Ln266", "not logged in");
                 textView.setText(defaultVal[position]);
                 imgView.setImageResource(myImages[position]);
             }
