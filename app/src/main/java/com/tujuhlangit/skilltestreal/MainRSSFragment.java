@@ -29,6 +29,7 @@ public class MainRSSFragment extends Fragment{
         textView = (TextView) rootView.findViewById(R.id.drawer_list_text);
         rssSites = getResources().getStringArray(R.array.rss_sites);
         imgView = (ImageView) rootView.findViewById(R.id.imageView);
+        //textView.setText(rssSites[0]);
         return rootView;
     }
 }

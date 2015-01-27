@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent" android:id="@+id/relative_layout">
 
+
     <view
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -10,6 +11,29 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="159dp" />
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="invisible"
+        android:id="@+id/fb_profile_text"
+        android:layout_below="@+id/fb_profile_pic"
+        android:layout_alignRight="@+id/fb_profile_pic"
+        android:layout_alignEnd="@+id/fb_profile_pic"
+        android:layout_marginTop="31dp" />
+
+    <view
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        class="com.facebook.widget.ProfilePictureView"
+        android:id="@+id/fb_profile_pic"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"
+        android:layout_marginTop="111dp" />
 
 
 </RelativeLayout>

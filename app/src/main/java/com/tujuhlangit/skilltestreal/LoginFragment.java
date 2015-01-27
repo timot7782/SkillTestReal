@@ -1,6 +1,7 @@
 package com.tujuhlangit.skilltestreal;
 
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,12 +9,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.app.Fragment;
 
+import com.facebook.Request;
+import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
+import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
+
+import java.util.Arrays;
 
 /**
  * Created by Timothy on 1/26/2015.
@@ -22,6 +27,7 @@ public class LoginFragment extends Fragment {
     private static final String TAG = "LoginFragment";
     private UiLifecycleHelper uiHelper;
     private boolean loggedIn = false;
+    private GraphUser user;
 
     public LoginFragment() {
 
@@ -37,11 +43,29 @@ public class LoginFragment extends Fragment {
     private void onSessionStateChange(Session session, SessionState state, Exception exception) {
         if (state.isOpened()) {
             Log.i(TAG, "Logged in...");
+            Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
+                @Override
+                public void onCompleted(GraphUser graphUser, Response response) {
+                    if(graphUser!=null) {
+                        Log.i(TAG,"User ID "+ graphUser.getId());
+                        Log.i(TAG,"Email "+ graphUser.asMap().get("email"));
+                        LoginFragment.this.setUser(graphUser);
+                    }
+                }
+            });
             this.loggedIn = true;
         } else if (state.isClosed()) {
             Log.i(TAG, "Logged out...");
             this.loggedIn = false;
         }
+    }
+
+    public void setUser(GraphUser user) {
+        this.user = user;
+    }
+
+    public GraphUser getUser() {
+        return this.user;
     }
 
     public boolean getStatusLogin() {
@@ -53,6 +77,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
         LoginButton fbLoginBtn = (LoginButton) rootView.findViewById(R.id.fb_login_button);
+        fbLoginBtn.setReadPermissions(Arrays.asList("public_profile","email"));
         fbLoginBtn.setFragment(new NativeFragmentWrapper(this));
 
         return rootView;

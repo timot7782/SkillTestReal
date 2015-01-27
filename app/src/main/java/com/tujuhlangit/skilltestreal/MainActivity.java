@@ -32,7 +32,7 @@ public class MainActivity extends ActionBarActivity implements ListView.OnItemCl
     private CharSequence mTitle;
     private CharSequence mDrawerTitle;
 
-    private LoginFragment loginFragment = new LoginFragment();;
+    private LoginFragment loginFragment = new LoginFragment();
 
 
     @Override
@@ -105,7 +105,7 @@ public class MainActivity extends ActionBarActivity implements ListView.OnItemCl
         }
 
         mDrawerList.setItemChecked(position, true);
-        setTitle("Login");
+        setTitle(mTitle);
         drawerLayout.closeDrawer(mDrawerList);
     }
     @Override
